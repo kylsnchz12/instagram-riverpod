@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "320584102047-ukidrdaitofqe7vpmb4ahc8ju60o76g6.apps.googleusercontent.com",
+          "client_id": "320584102047-459gav3efse8vonlmj5ls967fnm87d1f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.indagram",
+            "certificate_hash": "98bd0ec49cad5f46aa1a105089a001f009c0432b"
+          }
+        },
+        {
+          "client_id": "320584102047-fbk7dmt5n973j1urmsti9sfcm1sv221b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,8 +35,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "320584102047-ukidrdaitofqe7vpmb4ahc8ju60o76g6.apps.googleusercontent.com",
+              "client_id": "320584102047-fbk7dmt5n973j1urmsti9sfcm1sv221b.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "320584102047-j66a9spdu5bhbb8q5nstq3n774ravovu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.indagram"
+              }
             }
           ]
         }
