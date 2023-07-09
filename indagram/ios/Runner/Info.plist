@@ -3,7 +3,8 @@
 <plist version="1.0">
 <dict>
 
-
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Indagram would like to access your photos</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
