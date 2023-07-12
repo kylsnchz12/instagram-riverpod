@@ -173,7 +173,7 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                       ],
                     ),
                   ),
-
+                // add spacing to bottom of screen
                 const SizedBox(
                   height: 100,
                 ),
