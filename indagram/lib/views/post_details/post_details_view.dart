@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:indagram/enums/date_sorting.dart';
 import 'package:indagram/state/comments/model/post_comments_request.dart';
+import 'package:indagram/state/constants/firebase_collection_name.dart';
 import 'package:indagram/state/posts/models/post.dart';
 import 'package:indagram/state/posts/providers/can_current_user_delete_post_provider.dart';
 import 'package:indagram/state/posts/providers/delete_post_provider.dart';
@@ -31,6 +33,26 @@ class PostDetailsView extends ConsumerStatefulWidget {
 }
 
 class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
+  bool postDeleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to the post deletion event in real-time
+    final postDeletionStream = FirebaseFirestore.instance
+        .collection(FirebaseCollectionName.posts)
+        .doc(widget.post.postId)
+        .snapshots();
+
+    postDeletionStream.listen((snapshot) {
+      if (!snapshot.exists) {
+        setState(() {
+          postDeleted = true; // Update the deletion status
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final request = RequestForPostAndComments(
@@ -91,7 +113,8 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
               icon: const Icon(Icons.delete),
               onPressed: () async {
                 final shouldDeletePost = await const DeleteDialog(
-                        titleOfObjectToDelete: Strings.post)
+                  titleOfObjectToDelete: Strings.post,
+                )
                     .present(context)
                     .then((shouldDelete) => shouldDelete ?? false);
                 if (shouldDeletePost) {
@@ -110,6 +133,11 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
       body: postWithComments.when(
         data: (postWithComments) {
           final postId = postWithComments.post.postId;
+
+          if (postDeleted) {
+            return Container(); // Return an empty container if the post is deleted
+          }
+
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
