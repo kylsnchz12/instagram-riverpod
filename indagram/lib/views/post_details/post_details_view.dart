@@ -38,7 +38,7 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
   @override
   void initState() {
     super.initState();
-    // Listen to the post deletion event in real-time
+
     final postDeletionStream = FirebaseFirestore.instance
         .collection(FirebaseCollectionName.posts)
         .doc(widget.post.postId)
@@ -47,7 +47,7 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
     postDeletionStream.listen((snapshot) {
       if (!snapshot.exists) {
         setState(() {
-          postDeleted = true; // Update the deletion status
+          postDeleted = true;
         });
       }
     });
@@ -57,19 +57,18 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
   Widget build(BuildContext context) {
     final request = RequestForPostAndComments(
       postId: widget.post.postId,
-      limit: 3, // at most 3 comments
+      limit: 3,
       sortByCreatedAt: true,
       dateSorting: DateSorting.oldestOnTop,
     );
 
-    // get the actual post together with its comments
+    // post with comments
     final postWithComments = ref.watch(
       specificPostWithCommentsProvider(
         request,
       ),
     );
 
-    // can we delete this post?
     final canDeletePost = ref.watch(
       canCurrentUserDeletePostProvider(
         widget.post,
@@ -82,7 +81,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
           Strings.postDetails,
         ),
         actions: [
-          // share button is always present
           postWithComments.when(
             data: (postWithComments) {
               return IconButton(
@@ -107,7 +105,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
               );
             },
           ),
-          // delete button or no delete button if user cannot delete this post
           if (canDeletePost.value ?? false)
             IconButton(
               icon: const Icon(Icons.delete),
@@ -125,7 +122,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                     Navigator.of(context).pop();
                   }
                 }
-                // delete the post now
               },
             )
         ],
@@ -145,16 +141,13 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                 PostImageOrVideoView(
                   post: postWithComments.post,
                 ),
-                // like and comment buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // like button if post allows liking it
                     if (postWithComments.post.allowsLikes)
                       LikeButton(
                         postId: postId,
                       ),
-                    // comment button if post allows commenting on it
                     if (postWithComments.post.allowsComments)
                       IconButton(
                         icon: const Icon(
@@ -172,7 +165,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                       ),
                   ],
                 ),
-                // post details (shows divider at bottom)
                 PostDisplayNameAndMessageView(
                   post: postWithComments.post,
                 ),
@@ -185,11 +177,9 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                     color: Colors.white70,
                   ),
                 ),
-                // comments
                 CompactCommentsColumn(
                   comments: postWithComments.comments,
                 ),
-                // display like count
                 if (postWithComments.post.allowsLikes)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -201,7 +191,6 @@ class _PostDetailsViewState extends ConsumerState<PostDetailsView> {
                       ],
                     ),
                   ),
-                // add spacing to bottom of screen
                 const SizedBox(
                   height: 100,
                 ),

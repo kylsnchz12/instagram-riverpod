@@ -35,8 +35,7 @@ final specificPostWithCommentsProvider = StreamProvider.family
     controller.sink.add(result);
   }
 
-  // watch changes to the post
-
+  // changes in post
   final postSub = FirebaseFirestore.instance
       .collection(
         FirebaseCollectionName.posts,
@@ -67,8 +66,7 @@ final specificPostWithCommentsProvider = StreamProvider.family
     },
   );
 
-  // watch changes to the comments
-
+  // changes in comments
   final commentsQuery = FirebaseFirestore.instance
       .collection(
         FirebaseCollectionName.comments,

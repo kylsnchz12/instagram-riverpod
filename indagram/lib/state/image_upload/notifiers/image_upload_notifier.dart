@@ -35,13 +35,12 @@ class ImageUploadNotifier extends StateNotifier<IsLoading> {
 
     switch (fileType) {
       case FileType.image:
-        // create a thumbnail out of the file
         final fileAsImage = img.decodeImage(file.readAsBytesSync());
         if (fileAsImage == null) {
           isLoading = false;
           return false;
         }
-        // create thumbnail
+
         final thumbnail = img.copyResize(
           fileAsImage,
           width: Constants.imageThumbnailWidth,
@@ -65,15 +64,9 @@ class ImageUploadNotifier extends StateNotifier<IsLoading> {
         break;
     }
 
-    // calculate the aspect ratio
-
     final thumbnailAspectRatio = await thumbnailUint8List.getAspectRatio();
 
-    // calculate references
-
     final fileName = const Uuid().v4();
-
-    // create references to the thumbnail and the image itself
 
     final thumbnailRef = FirebaseStorage.instance
         .ref()
@@ -88,16 +81,13 @@ class ImageUploadNotifier extends StateNotifier<IsLoading> {
         .child(fileName);
 
     try {
-      // upload the thumbnail
       final thumbnailUploadTask =
           await thumbnailRef.putData(thumbnailUint8List);
       final thumbnailStorageId = thumbnailUploadTask.ref.name;
 
-      // upload the original image
       final originalFileUploadTask = await originalFileRef.putFile(file);
       final originalFileStorageId = originalFileUploadTask.ref.name;
 
-      // upload the post itself
       final postPayload = PostPayload(
         userId: userId,
         message: message,

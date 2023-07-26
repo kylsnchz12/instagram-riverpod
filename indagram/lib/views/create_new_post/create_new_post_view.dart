@@ -58,7 +58,6 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
             icon: const Icon(Icons.send),
             onPressed: isPostButtonEnabled.value
                 ? () async {
-                    // get the user id first
                     final userId = ref.read(userIdProvider);
                     if (userId == null) {
                       return;
@@ -84,7 +83,6 @@ class _CreateNewPostViewState extends ConsumerState<CreateNewPostView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // thumbnail
             FileThumbnailView(
               thumbnailRequest: thumbnailRequest,
             ),
